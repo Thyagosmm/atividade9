@@ -1,0 +1,58 @@
+.alterar-container {
+  display: flex;
+  height: 100vh;
+}
+
+.alterar-left, .alterar-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.alterar-left {
+  background-color: #f7f7f7;
+  padding: 2rem;
+  text-align: center;
+}
+
+.alterar-logo {
+  max-width: 200px;
+  margin-bottom: 1rem;
+}
+
+.alterar-right {
+  padding: 2rem;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  border: 2px solid black;
+  padding: 2rem;
+  background-color: #ffffff;
+}
+
+.form-field {
+  margin-bottom: 1rem;
+}
+
+.input-field {
+  width: 100%;
+}
+
+.alterar-button {
+  color: white;
+  width: 100%;
+  margin-top: 1rem;
+  background-color: blue;
+}
+
+.excluir-button {
+  color: white;
+  width: 100%;
+  margin-top: 1rem;
+  background-color: red;
+}
