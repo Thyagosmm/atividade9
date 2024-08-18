@@ -1,30 +1,42 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CButton, CContainer, CForm, CFormInput, CFormLabel } from '@coreui/react';
-import logo from '../assets/logo.png';
-import api from '../api';
-import '../styles/CadastroUsuario.css';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { CButton, CContainer, CForm, CFormInput, CFormLabel } from "@coreui/react";
+import logo from "../assets/logo.png";
+import { auth, createUserWithEmailAndPassword } from "../firebase/firebaseAuth";
+import api from "../api";
+import "../styles/CadastroUsuario.css";
 
 export default function Cadastro() {
-  const [nome, setNome] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [senha, setSenha] = React.useState('');
+  const [nome, setNome] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [senha, setSenha] = React.useState("");
   const navigate = useNavigate();
 
   async function handleCadastro() {
     try {
-      const response = await api.post('/usuarios', { nome, email, senha });
-      console.log('Usuário cadastrado:', response.data);
-      setNome('');
-      setEmail('');
-      setSenha('');
+      // Registrar o usuário no Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+      const user = userCredential.user;
+      console.log("Usuário registrado no Firebase:", user);
+
+      // Registrar o usuário na sua API (Banco de Dados)
+      const response = await api.post("/usuarios", { nome, email, senha });
+      console.log("Usuário cadastrado na API:", response.data);
+
+      // Limpar os campos de input
+      setNome("");
+      setEmail("");
+      setSenha("");
+
+      // Redirecionar para outra página ou exibir mensagem de sucesso
+      navigate("/");
     } catch (error) {
-      console.error('Erro ao cadastrar o usuário:', error);
+      console.error("Erro ao cadastrar o usuário:", error);
     }
   }
 
   function handleVoltar() {
-    navigate('/');
+    navigate("/");
   }
 
   return (
@@ -44,7 +56,7 @@ export default function Cadastro() {
                   type="text"
                   placeholder="Digite seu nome..."
                   value={nome}
-                  onChange={e => setNome(e.target.value)}
+                  onChange={(e) => setNome(e.target.value)}
                 />
               </div>
               <div className="form-field">
@@ -54,7 +66,7 @@ export default function Cadastro() {
                   type="email"
                   placeholder="Digite seu e-mail..."
                   value={email}
-                  onChange={e => setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="form-field">
@@ -64,11 +76,23 @@ export default function Cadastro() {
                   type="password"
                   placeholder="Digite sua senha..."
                   value={senha}
-                  onChange={e => setSenha(e.target.value)}
+                  onChange={(e) => setSenha(e.target.value)}
                 />
               </div>
-              <CButton color="primary" className="login-button" onClick={handleCadastro}>Cadastrar</CButton>
-              <CButton color="danger" className="register-button" onClick={handleVoltar}>Voltar</CButton>
+              <CButton
+                color="primary"
+                className="login-button"
+                onClick={handleCadastro}
+              >
+                Cadastrar
+              </CButton>
+              <CButton
+                color="danger"
+                className="register-button"
+                onClick={handleVoltar}
+              >
+                Voltar
+              </CButton>
             </CForm>
           </div>
         </CContainer>

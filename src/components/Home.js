@@ -1,11 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CButton, CContainer, CCard, CCardBody, CCardHeader, CListGroup, CListGroupItem } from '@coreui/react';
-import { cilPeople, cilPlus } from '@coreui/icons';
-import CIcon from '@coreui/icons-react';
-import logo from '../assets/logo.png';
-import '../styles/Home.css';
-import api from '../api';
+// Home.js
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  CButton,
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CListGroup,
+  CListGroupItem,
+} from "@coreui/react";
+import { cilPeople, cilPlus, cilExitToApp } from "@coreui/icons";
+import CIcon from "@coreui/icons-react";
+import logo from "../assets/logo.png";
+import "../styles/Home.css";
+import api from "../api";
+import { auth, signOut } from "../firebase/firebaseAuth"; // Importa signOut
 
 export default function Home() {
   const [contatos, setContatos] = useState([]);
@@ -14,10 +23,10 @@ export default function Home() {
   useEffect(() => {
     const fetchContatos = async () => {
       try {
-        const response = await api.get('/contatos');
+        const response = await api.get("/contatos");
         setContatos(response.data);
       } catch (error) {
-        console.error('Erro ao buscar contatos:', error);
+        console.error("Erro ao buscar contatos:", error);
       }
     };
 
@@ -29,7 +38,16 @@ export default function Home() {
   };
 
   const handleAddContato = () => {
-    navigate('/cadastrarcontato');
+    navigate("/cadastrarcontato");
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate("/"); // Redireciona para a página de login após o logout
+    } catch (error) {
+      console.error("Erro ao sair:", error.message);
+    }
   };
 
   return (
@@ -43,18 +61,28 @@ export default function Home() {
             <h2>
               <CIcon icon={cilPeople} className="header-icon" /> User
             </h2>
-            <CButton
-              color="primary"
-              className="add-button"
-              onClick={handleAddContato}
-            >
-              <CIcon icon={cilPlus} className="add-icon" /> <span>ADD</span>
-            </CButton>
+            <div className="button-group">
+              <CButton
+                color="primary"
+                className="add-button"
+                onClick={handleAddContato}
+              >
+                <CIcon icon={cilPlus} className="add-icon" /> <span>ADD</span>
+              </CButton>
+              <CButton
+                color="danger"
+                className="logout-button"
+                onClick={handleLogout}
+              >
+                <CIcon icon={cilExitToApp} className="logout-icon" />{" "}
+                <span>SAIR</span>
+              </CButton>
+            </div>
           </CCardHeader>
           <CCardBody>
             <CListGroup className="contato-list">
               {contatos.length > 0 ? (
-                contatos.map(contato => (
+                contatos.map((contato) => (
                   <CListGroupItem
                     key={contato.id}
                     className="contato-item"

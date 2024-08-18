@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CButton, CContainer, CForm, CFormInput, CFormLabel } from '@coreui/react';
 import logo from '../assets/logo.png';
+import { auth, signInWithEmailAndPassword } from '../firebase/firebaseAuth';
 import '../styles/Login.css';
 
 export default function Login() {
@@ -9,8 +10,15 @@ export default function Login() {
   const [senha, setSenha] = React.useState('');
   const navigate = useNavigate();
 
-  function handleLogin() {
-    navigate('/home');
+  async function handleLogin() {
+    try {
+      await signInWithEmailAndPassword(auth, email, senha);
+      // Redireciona para a página inicial após o login bem-sucedido
+      navigate('/home');
+    } catch (error) {
+      // Trate os erros aqui
+      console.error('Erro ao fazer login:', error.message);
+    }
   }
 
   function handleRegister() {

@@ -50,8 +50,15 @@
   border-color: #007bff;
 }
 
+.logout-button{
+  color: white;
+  background-color: #ff0000;
+  border-color: #ff0000;
+}
+
 .add-icon {
   margin-right: 0.5rem;
+  margin-top: 0.2rem;
 }
 
 .contato-list {
